@@ -1,0 +1,37 @@
+name: Daily Firestore backup
+
+on:
+  schedule:
+    # 03:00 UTC ogni giorno
+    - cron: "0 3 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run backup
+        run: node scripts/backup-firestore.mjs
+
+      - name: Commit and push backup
+        run: |
+          git config user.name "monster-vault-backup-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add backups/
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica da salvare."
+          else
+            git commit -m "chore: daily Firestore backup $(date -u +%Y-%m-%d)"
+            git push
+          fi
