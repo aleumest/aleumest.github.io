@@ -2,7 +2,7 @@
   "name": "monster-vault",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://aleumest.github.io/monster-vault",
+  "homepage": "https://aleumest.github.io",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
